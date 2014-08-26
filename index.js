@@ -2,11 +2,11 @@
 var _ = require('lodash')
 var Shuffle = require('shuffle')
 
-var deck = [];
+var deck = []
 
 _.times(10, function() {
     deck = deck.concat(Shuffle.shuffle().cards)
-});
+})
 
 var blackjackDeck = Shuffle.shuffle({deck: deck})
 
@@ -15,7 +15,7 @@ function unicard(card) {
         .replace('C', chalk.bold.black('♣︎'))
         .replace('S', chalk.bold.black('♠︎'))
         .replace('H', chalk.red('♥︎'))
-        .replace('D', chalk.red('♦︎'));
+        .replace('D', chalk.red('♦︎'))
 }
 
 var players = {}
@@ -23,9 +23,9 @@ var dealer = []
 
 function handTotal(hand, total){
     if(hand.length === 0) return total
-    if(!total) total = 0;
+    if(!total) total = 0
 
-    card = hand[0];
+    card = hand[0]
 
     if(card.sort === 14) { // Ace
         var fullValue = handTotal(_.rest(hand), total + 11)
@@ -40,22 +40,22 @@ function handTotal(hand, total){
 }
 
 function checkBust(player) {
-    return handTotal(player) > 21;
+    return handTotal(player) > 21
 }
 
 function hit(player) {
     blackjackDeck.deal(1, players[player])
-    return checkBust(players[player]);
+    return checkBust(players[player])
 }
 
 function dealerTurn() {
     if(checkBust(dealer)) { // Dealer Bust
         // Handle bust
     } else if(handTotal(dealer) >= 17) { // Dealer stands
-        compareHands();
+        compareHands()
     } else { // Dealer hits
-        blackjackDeck.deal(1, [dealer]);
-        dealerTurn();
+        blackjackDeck.deal(1, [dealer])
+        dealerTurn()
     }
 }
 
