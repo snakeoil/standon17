@@ -1,0 +1,23 @@
+{
+  "name": "standon17",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snakeoil/standon17.git"
+  },
+  "author": "harrisonm, maxmechanic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/snakeoil/standon17/issues"
+  },
+  "homepage": "https://github.com/snakeoil/standon17",
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "shuffle": "^0.2.1"
+  }
+}
