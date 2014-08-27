@@ -2,65 +2,65 @@
 var _ = require('lodash')
 var Shuffle = require('shuffle')
 
-var deck = []
+function Deck() {
+    this.players = {}
+    this.dealer = []
 
-_.times(10, function() {
-    deck = deck.concat(Shuffle.shuffle().cards)
-})
+    var deck = []
+    _.times(10, function() {
+        deck = deck.concat(Shuffle.shuffle().cards)
+    })
 
-var blackjackDeck = Shuffle.shuffle({deck: deck})
+    this.blackjackDeck = Shuffle.shuffle({deck: deck})
 
-function unicard(card) {
-    return card.toShortDisplayString()
-        .replace('C', chalk.bold.black('♣︎'))
-        .replace('S', chalk.bold.black('♠︎'))
-        .replace('H', chalk.red('♥︎'))
-        .replace('D', chalk.red('♦︎'))
 }
 
-var players = {}
-var dealer = []
 
-function handTotal(hand, total){
-    if(hand.length === 0) return total
-    if(!total) total = 0
+Deck.prototype.unicard = function unicard(card) {
+    return card.toShortDisplayString()
+}
+
+Deck.prototype.handTotal = function handTotal(hand, total){
+    if (hand.length === 0) return total
+    if (!total) total = 0
 
     card = hand[0]
 
     if(card.sort === 14) { // Ace
-        var fullValue = handTotal(_.rest(hand), total + 11)
+        var fullValue = this.handTotal(_.rest(hand), total + 11)
         if(fullValue <= 21) {
             return fullValue
         } else {
-            return handTotal(_.rest(hand), total + 1)
+            return this.handTotal(_.rest(hand), total + 1)
         }
     } else {
-        return handTotal(_.rest(hand), total + Math.min(card.sort, 10))
+        return this.handTotal(_.rest(hand), total + Math.min(card.sort, 10))
     }
 }
 
-function checkBust(player) {
-    return handTotal(player) > 21
+Deck.prototype.checkBust = function checkBust(player) {
+    return this.handTotal(player) > 21
 }
 
-function hit(player) {
+Deck.prototype.hit = function hit(player) {
     blackjackDeck.deal(1, players[player])
-    return checkBust(players[player])
+    return this.checkBust(players[player])
 }
 
-function dealerTurn() {
-    if(checkBust(dealer)) { // Dealer Bust
+Deck.prototype.dealerTurn = function dealerTurn() {
+    if (this.checkBust(this.dealer)) { // Dealer Bust
         // Handle bust
-    } else if(handTotal(dealer) >= 17) { // Dealer stands
-        compareHands()
+        console.log('dealer busts')
+    } else if (this.handTotal(this.dealer) >= 17) { // Dealer stands
+        this.compareHands()
     } else { // Dealer hits
-        blackjackDeck.deal(1, [dealer])
-        dealerTurn()
+        blackjackDeck.deal(1, [this.dealer])
+        this.dealerTurn()
     }
 }
 
-function compareHands() {
-    if (checkBust(dealer)) {
+Deck.prototype.compareHands = function compareHands() {
+    if (this.checkBust(dealer)) {
         return players.length
     }
 
@@ -69,8 +69,9 @@ function compareHands() {
         losses = 0
 
     for (var playerName in players) {
-        var playerScore = handTotal(player)
-        var dealerScore = handTotal(dealer)
+        var playerScore = this.handTotal(player)
+        var dealerScore = this.handTotal(dealer)
+
         if (playerScore > dealerScore) {
             wins++
         } else if (playerScore < dealerScore) {
@@ -80,3 +81,6 @@ function compareHands() {
         }
     }
 }
+
+
+module.exports = Deck
