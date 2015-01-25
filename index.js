@@ -1,6 +1,7 @@
 /* jshint asi: true */
 var _ = require('lodash')
 var Shuffle = require('shuffle')
+var chalk = require('chalk')
 
 var deck = [];
 
